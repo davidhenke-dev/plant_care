@@ -1,69 +1,28 @@
-import 'package:flutter_test/flutter_test.dart';
-import 'package:plant_care/data/models/plant.dart';
-import 'package:plant_care/data/models/location.dart';
-import 'package:plant_care/data/models/watering_task.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'data/models/location.dart';
+import 'data/models/plant.dart';
+import 'data/models/watering_task.dart';
+import 'app.dart';
 
-void main() {
-  group('Plant Model', () {
-    test('needsWateringToday ist true wenn nie gegossen', () {
-      final plant = Plant(
-        id: '1',
-        name: 'Monstera',
-        locationId: 'loc1',
-        wateringIntervalDays: 7,
-        createdAt: DateTime.now(),
-        lastWateredAt: null,
-      );
-      expect(plant.needsWateringToday, isTrue);
-    });
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Hive.initFlutter();
 
-    test('needsWateringToday ist false wenn heute gegossen', () {
-      final plant = Plant(
-        id: '1',
-        name: 'Monstera',
-        locationId: 'loc1',
-        wateringIntervalDays: 7,
-        createdAt: DateTime.now(),
-        lastWateredAt: DateTime.now(),
-      );
-      expect(plant.needsWateringToday, isFalse);
-    });
+  // Adapter registrieren
+  Hive.registerAdapter(LocationAdapter());
+  Hive.registerAdapter(PlantAdapter());
+  Hive.registerAdapter(WateringTaskAdapter());
 
-    test('needsWateringToday ist true wenn Intervall überschritten', () {
-      final plant = Plant(
-        id: '1',
-        name: 'Monstera',
-        locationId: 'loc1',
-        wateringIntervalDays: 7,
-        createdAt: DateTime.now(),
-        lastWateredAt: DateTime.now().subtract(const Duration(days: 8)),
-      );
-      expect(plant.needsWateringToday, isTrue);
-    });
-  });
+  // Boxen öffnen
+  await Hive.openBox<Location>('locations');
+  await Hive.openBox<Plant>('plants');
+  await Hive.openBox<WateringTask>('watering_tasks');
 
-  group('Location Model', () {
-    test('light getter gibt korrekten LightLevel zurück', () {
-      final location = Location(
-        id: 'loc1',
-        name: 'Wohnzimmer',
-        lightLevel: LightLevel.partialSun.index,
-        humidityLevel: HumidityLevel.moderate.index,
-        createdAt: DateTime.now(),
-      );
-      expect(location.light, LightLevel.partialSun);
-      expect(location.humidity, HumidityLevel.moderate);
-    });
-  });
-
-  group('WateringTask Model', () {
-    test('isDone ist standardmäßig false', () {
-      final task = WateringTask(
-        id: 'task1',
-        plantId: 'plant1',
-        scheduledFor: DateTime.now(),
-      );
-      expect(task.isDone, isFalse);
-    });
-  });
+  runApp(
+    const ProviderScope(
+      child: PlantCareApp(),
+    ),
+  );
 }
