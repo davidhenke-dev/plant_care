@@ -1,0 +1,35 @@
+{
+  "name": "PlantCare",
+  "identifier": "com.davidhenke.plantcare.source",
+  "sourceURL": "https://raw.githubusercontent.com/YOUR_USERNAME/plant_care/main/altstore-source.json",
+  "apps": [
+    {
+      "name": "PlantCare",
+      "bundleIdentifier": "com.davidhenke.plantcare",
+      "developerName": "David Henke",
+      "subtitle": "Deine Pflanzen im Blick",
+      "localizedDescription": "PlantCare hilft dir, deine Pflanzen rechtzeitig zu gießen. Verwalte Standorte, tracke Bewässerungsintervalle und erhalte tägliche Erinnerungen.",
+      "iconURL": "https://raw.githubusercontent.com/YOUR_USERNAME/plant_care/main/assets/icon.png",
+      "category": "lifestyle",
+      "version": "1.0.0",
+      "versionDate": "2026-04-20",
+      "versionDescription": "Erste Version mit Pflanzenverwaltung, Standorten und Push-Benachrichtigungen.",
+      "downloadURL": "https://github.com/YOUR_USERNAME/plant_care/releases/download/v1.0.0/PlantCare.ipa",
+      "localizedDescription": "Behalte den Überblick über deine Pflanzen.",
+      "size": 0,
+      "minOSVersion": "13.0",
+      "permissions": [
+        {
+          "type": "photos",
+          "usageDescription": "PlantCare möchte Fotos deiner Pflanzen speichern."
+        },
+        {
+          "type": "notifications",
+          "usageDescription": "PlantCare sendet dir tägliche Erinnerungen zum Gießen."
+        }
+      ],
+      "screenshotURLs": []
+    }
+  ],
+  "news": []
+}

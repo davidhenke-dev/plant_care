@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import '../../../data/repositories/repository_providers.dart';
+import '../../../features/settings/application/notification_settings_notifier.dart';
 import '../application/home_notifier.dart';
 import 'watering_todo_card.dart';
 
@@ -12,6 +13,7 @@ class HomeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final plantsAsync = ref.watch(homeNotifierProvider);
     final locationRepo = ref.read(locationRepositoryProvider);
+    final settingsAsync = ref.watch(notificationSettingsProvider);
     final today = DateFormat('EEEE, d. MMMM', 'de').format(DateTime.now());
 
     return CupertinoPageScaffold(
@@ -19,6 +21,23 @@ class HomeScreen extends ConsumerWidget {
         slivers: [
           CupertinoSliverNavigationBar(
             largeTitle: const Text('Heute'),
+            trailing: settingsAsync.maybeWhen(
+              data: (settings) => CupertinoButton(
+                padding: EdgeInsets.zero,
+                onPressed: () => ref
+                    .read(notificationSettingsProvider.notifier)
+                    .setEnabled(!settings.isEnabled),
+                child: Icon(
+                  settings.isEnabled
+                      ? CupertinoIcons.bell_fill
+                      : CupertinoIcons.bell,
+                  color: settings.isEnabled
+                      ? const Color(0xFF4CAF50)
+                      : CupertinoColors.systemGrey,
+                ),
+              ),
+              orElse: () => const SizedBox.shrink(),
+            ),
           ),
           SliverToBoxAdapter(
             child: Padding(

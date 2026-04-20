@@ -27,12 +27,14 @@ void main() {
     await Hive.openBox<Location>('widget_test_locations');
     await Hive.openBox<Plant>('widget_test_plants');
     await Hive.openBox<WateringTask>('widget_test_tasks');
+    await Hive.openBox('widget_test_settings');
   });
 
   tearDown(() async {
     await Hive.box<Location>('widget_test_locations').clear();
     await Hive.box<Plant>('widget_test_plants').clear();
     await Hive.box<WateringTask>('widget_test_tasks').clear();
+    await Hive.box('widget_test_settings').clear();
   });
 
   tearDownAll(() async {
@@ -52,6 +54,8 @@ void main() {
               Hive.box<WateringTask>('widget_test_tasks'),
             ),
           ),
+          settingsBoxProvider
+              .overrideWithValue(Hive.box('widget_test_settings')),
         ],
       );
 

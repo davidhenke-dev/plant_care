@@ -4,6 +4,7 @@ import '../../../data/repositories/repository_providers.dart';
 import '../application/plant_notifier.dart';
 import 'add_plant_sheet.dart';
 import 'plant_card.dart';
+import 'plant_detail_screen.dart';
 
 class PlantsScreen extends ConsumerWidget {
   const PlantsScreen({super.key});
@@ -102,6 +103,12 @@ class PlantsScreen extends ConsumerWidget {
                           plant: plant,
                           locationName:
                               locationMap[plant.locationId] ?? 'Unbekannt',
+                          onTap: () => Navigator.of(context).push(
+                            CupertinoPageRoute(
+                              builder: (_) =>
+                                  PlantDetailScreen(plantId: plant.id),
+                            ),
+                          ),
                           onDelete: () => _confirmDelete(
                             context,
                             ref,

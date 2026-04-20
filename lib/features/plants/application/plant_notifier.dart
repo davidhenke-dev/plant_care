@@ -46,6 +46,15 @@ class PlantNotifier extends AsyncNotifier<List<Plant>> {
       ref.invalidateSelf();
     }
   }
+
+  Future<void> updateImagePath(String id, String imagePath) async {
+    final plant = await _repository.getById(id);
+    if (plant != null) {
+      plant.imagePath = imagePath;
+      await plant.save();
+      ref.invalidateSelf();
+    }
+  }
 }
 
 final plantNotifierProvider =

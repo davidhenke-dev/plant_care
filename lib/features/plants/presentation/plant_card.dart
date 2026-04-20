@@ -7,6 +7,7 @@ class PlantCard extends StatelessWidget {
   final String locationName;
   final VoidCallback onDelete;
   final VoidCallback onWatered;
+  final VoidCallback? onTap;
 
   const PlantCard({
     super.key,
@@ -14,13 +15,16 @@ class PlantCard extends StatelessWidget {
     required this.locationName,
     required this.onDelete,
     required this.onWatered,
+    this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
     final needsWater = plant.needsWateringToday;
 
-    return Container(
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
         color: CupertinoColors.systemBackground,
@@ -134,6 +138,7 @@ class PlantCard extends StatelessWidget {
             ),
           ],
         ),
+      ),
       ),
     );
   }

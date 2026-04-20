@@ -5,6 +5,7 @@ import 'package:plant_care/data/models/plant.dart';
 import 'package:plant_care/data/repositories/plant_repository.dart';
 import 'package:plant_care/data/repositories/repository_providers.dart';
 import 'package:plant_care/features/home/application/home_notifier.dart';
+import 'package:plant_care/features/plants/application/plant_notifier.dart';
 
 void main() {
   late ProviderContainer container;
@@ -16,13 +17,14 @@ void main() {
 
   setUp(() async {
     final box = await Hive.openBox<Plant>('home_notifier_test_plants');
+    final repo = PlantRepository(box);
     container = ProviderContainer(
       overrides: [
-        plantRepositoryProvider.overrideWithValue(
-          PlantRepository(box),
-        ),
+        plantRepositoryProvider.overrideWithValue(repo),
       ],
     );
+    // plantNotifierProvider muss bereit sein bevor HomeNotifier es beobachtet
+    await container.read(plantNotifierProvider.future);
   });
 
   tearDown(() async {
