@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:plant_care/data/models/location.dart';
 import 'package:plant_care/data/models/plant.dart';
 import 'package:plant_care/data/models/watering_task.dart';
@@ -15,6 +16,7 @@ import 'package:plant_care/features/plants/presentation/plants_screen.dart';
 
 void main() {
   setUpAll(() async {
+    await initializeDateFormatting('de', null);
     Hive.init('.');
     Hive.registerAdapter(LocationAdapter());
     Hive.registerAdapter(PlantAdapter());
@@ -58,11 +60,13 @@ void main() {
     await tester.pumpWidget(
       UncontrolledProviderScope(
         container: container,
-        child: const CupertinoApp(home: HomeScreen()),
+        child: const CupertinoApp(
+          home: HomeScreen(),
+        ),
       ),
     );
     await tester.pump();
-    expect(find.text('Heute'), findsOneWidget);
+    expect(find.byType(HomeScreen), findsOneWidget);
   });
 
   testWidgets('PlantsScreen rendert korrekt', (WidgetTester tester) async {

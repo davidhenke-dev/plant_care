@@ -5,6 +5,7 @@ import 'data/models/location.dart';
 import 'data/models/plant.dart';
 import 'data/models/watering_task.dart';
 import 'app.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,6 +21,7 @@ void main() async {
   await Hive.openBox<Plant>('plants');
   await Hive.openBox<WateringTask>('watering_tasks');
 
+  await initializeDateFormatting('de', null);
   runApp(
     const ProviderScope(
       child: PlantCareApp(),
