@@ -1,35 +1,91 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:plant_care/data/models/location.dart';
+import 'package:plant_care/data/models/plant.dart';
+import 'package:plant_care/data/models/watering_task.dart';
+import 'package:plant_care/data/repositories/location_repository.dart';
+import 'package:plant_care/data/repositories/plant_repository.dart';
+import 'package:plant_care/data/repositories/repository_providers.dart';
+import 'package:plant_care/data/repositories/watering_task_repository.dart';
 import 'package:plant_care/features/home/presentation/home_screen.dart';
 import 'package:plant_care/features/locations/presentation/locations_screen.dart';
 import 'package:plant_care/features/plants/presentation/plants_screen.dart';
 
 void main() {
+  setUpAll(() async {
+    Hive.init('.');
+    Hive.registerAdapter(LocationAdapter());
+    Hive.registerAdapter(PlantAdapter());
+    Hive.registerAdapter(WateringTaskAdapter());
+  });
+
+  setUp(() async {
+    await Hive.openBox<Location>('widget_test_locations');
+    await Hive.openBox<Plant>('widget_test_plants');
+    await Hive.openBox<WateringTask>('widget_test_tasks');
+  });
+
+  tearDown(() async {
+    await Hive.box<Location>('widget_test_locations').clear();
+    await Hive.box<Plant>('widget_test_plants').clear();
+    await Hive.box<WateringTask>('widget_test_tasks').clear();
+  });
+
+  tearDownAll(() async {
+    await Hive.close();
+  });
+
+  ProviderContainer buildContainer() => ProviderContainer(
+        overrides: [
+          locationRepositoryProvider.overrideWithValue(
+            LocationRepository(Hive.box<Location>('widget_test_locations')),
+          ),
+          plantRepositoryProvider.overrideWithValue(
+            PlantRepository(Hive.box<Plant>('widget_test_plants')),
+          ),
+          wateringTaskRepositoryProvider.overrideWithValue(
+            WateringTaskRepository(
+              Hive.box<WateringTask>('widget_test_tasks'),
+            ),
+          ),
+        ],
+      );
+
   testWidgets('HomeScreen rendert korrekt', (WidgetTester tester) async {
+    final container = buildContainer();
     await tester.pumpWidget(
-      const ProviderScope(
-        child: CupertinoApp(home: HomeScreen()),
+      UncontrolledProviderScope(
+        container: container,
+        child: const CupertinoApp(home: HomeScreen()),
       ),
     );
+    await tester.pump();
     expect(find.text('Heute'), findsOneWidget);
   });
 
   testWidgets('PlantsScreen rendert korrekt', (WidgetTester tester) async {
+    final container = buildContainer();
     await tester.pumpWidget(
-      const ProviderScope(
-        child: CupertinoApp(home: PlantsScreen()),
+      UncontrolledProviderScope(
+        container: container,
+        child: const CupertinoApp(home: PlantsScreen()),
       ),
     );
+    await tester.pump();
     expect(find.text('Pflanzen'), findsOneWidget);
   });
 
   testWidgets('LocationsScreen rendert korrekt', (WidgetTester tester) async {
+    final container = buildContainer();
     await tester.pumpWidget(
-      const ProviderScope(
-        child: CupertinoApp(home: LocationsScreen()),
+      UncontrolledProviderScope(
+        container: container,
+        child: const CupertinoApp(home: LocationsScreen()),
       ),
     );
+    await tester.pump();
     expect(find.text('Standorte'), findsOneWidget);
   });
 }
