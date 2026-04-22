@@ -1,0 +1,200 @@
+{
+  "@@locale": "fr",
+
+  "tabHome": "Accueil",
+  "tabPlants": "Plantes",
+  "tabLocations": "Emplacements",
+
+  "settingsTitle": "Paramètres",
+  "settingsAppearance": "Apparence",
+  "settingsDesign": "Thème",
+  "settingsThemeSystem": "Système",
+  "settingsThemeLight": "Clair",
+  "settingsThemeDark": "Sombre",
+  "settingsReminders": "Rappels",
+  "settingsPushNotifications": "Notifications push",
+  "settingsPushSubtitle": "Rappel quotidien d'arrosage",
+  "settingsCalendar": "Apple Calendar",
+  "settingsCalendarSubtitle": "Ajouter les arrosages au calendrier",
+  "settingsLanguage": "Langue",
+  "settingsLanguageSubtitle": "Changer la langue de l'application",
+
+  "homeTodayTitle": "Aujourd'hui",
+  "homeNeedsWatering": "À arroser",
+  "homeNeedsFertilizing": "À fertiliser",
+  "homeAllDone": "Tout fait ! 🎉",
+  "homeNothingToDo": "Rien à faire aujourd'hui.",
+  "homeWeatherNow": "Maintenant",
+  "homeWeatherNowNight": "Maintenant (nuit)",
+  "homeWeatherTonight": "Ce soir",
+  "homeWeatherTomorrow": "Dans la journée",
+
+  "plantsTitle": "Plantes",
+  "plantsEmpty": "Aucune plante",
+  "plantsEmptyHint": "Appuie sur + pour en ajouter une",
+  "plantsDeleteTitle": "Supprimer la plante",
+  "plantsDeleteMessage": "Veux-tu vraiment supprimer \"{name}\" ?",
+  "@plantsDeleteMessage": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "plantsNeedsWateringToday": "À arroser aujourd'hui",
+  "plantsWateringInterval": "Tous les {days} jours",
+  "@plantsWateringInterval": {
+    "placeholders": { "days": { "type": "int" } }
+  },
+
+  "locationsTitle": "Emplacements",
+  "locationsEmpty": "Aucun emplacement",
+  "locationsEmptyHint": "Appuie sur + pour en créer un",
+  "locationsDeleteTitle": "Supprimer l'emplacement",
+  "locationsDeleteMessage": "Veux-tu vraiment supprimer \"{name}\" ?",
+  "@locationsDeleteMessage": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+
+  "locationDetailTitle": "Emplacement",
+  "locationDetailPlantsTitle": "Plantes ici",
+  "locationDetailNoPlantsHint": "Aucune plante à cet emplacement.",
+  "locationDetailReassignButton": "Déplacer",
+  "locationDetailReassignTitle": "Choisir un nouvel emplacement",
+  "locationFieldName": "Nom",
+  "locationFieldLight": "Lumière",
+  "locationFieldHumidity": "Humidité",
+  "locationFieldDraft": "Courants d'air",
+  "locationFieldHeated": "Chauffé en hiver",
+  "locationLightFull": "☀️ Ensoleillé",
+  "locationLightPartial": "⛅ Mi-ombre",
+  "locationLightShade": "🌥 Ombragé",
+  "locationHumidityDry": "🏜 Sec",
+  "locationHumidityModerate": "🌤 Modéré",
+  "locationHumidityHumid": "💧 Humide",
+  "locationDrafty": "Courants d'air",
+  "locationUnheated": "Non chauffé",
+  "yes": "Oui",
+  "no": "Non",
+
+  "plantDetailInfoTab": "Info",
+  "plantDetailLocationTab": "Emplacement",
+  "plantDetailPhotosTab": "Photos",
+  "plantDetailWateringInterval": "Fréquence d'arrosage",
+  "plantDetailLastWatered": "Dernier arrosage",
+  "plantDetailNextWatering": "Prochain arrosage",
+  "plantDetailNotes": "Notes",
+  "plantDetailFertilizingInterval": "Fréquence de fertilisation",
+  "plantDetailLastFertilized": "Dernière fertilisation",
+  "plantDetailNextFertilizing": "Prochaine fertilisation",
+  "plantDetailNeverWatered": "Jamais",
+  "plantDetailMarkWatered": "Marquer comme arrosé 💧",
+  "plantDetailMarkFertilized": "Marquer comme fertilisé 🌱",
+  "plantDetailNoPhoto": "Aucune photo disponible",
+  "plantDetailChangePhoto": "Changer la photo",
+  "plantDetailLocationNotFound": "Emplacement introuvable",
+  "plantDetailEveryNWeeks": "Toutes les {weeks} semaines",
+  "@plantDetailEveryNWeeks": {
+    "placeholders": { "weeks": { "type": "int" } }
+  },
+  "plantDetailEveryNDays": "Tous les {days} jours",
+  "@plantDetailEveryNDays": {
+    "placeholders": { "days": { "type": "int" } }
+  },
+
+  "wateringCardNeverWatered": "Jamais arrosé",
+  "wateringCardInterval": "Intervalle : tous les {days} jours",
+  "@wateringCardInterval": {
+    "placeholders": { "days": { "type": "int" } }
+  },
+  "fertilizingCardNeverFertilized": "Jamais fertilisé",
+  "fertilizingCardInterval": "Intervalle : toutes les {weeks} semaines",
+  "@fertilizingCardInterval": {
+    "placeholders": { "weeks": { "type": "int" } }
+  },
+
+  "actionCancel": "Annuler",
+  "actionDelete": "Supprimer",
+  "actionSave": "Enregistrer",
+  "actionNext": "Suivant",
+  "actionDone": "Terminé",
+
+  "createPlantStep1Title": "Comment s'appelle\nta plante ?",
+  "createPlantStep1Subtitle": "Cherche dans notre base – on remplit le reste pour toi.",
+  "createPlantNameHint": "ex. Monstera, Cactus, Romarin …",
+  "createPlantSearchButton": "Rechercher dans la base",
+  "createPlantSearchHint": "Rechercher une plante …",
+  "createPlantOrManualLabel": "ou entrer manuellement",
+  "createPlantOrDivider": "ou",
+  "createPlantManualEntry": "Entrer manuellement",
+
+  "createPlantStep2Title": "Quand as-tu arrosé pour la dernière fois ?",
+  "createPlantStep2Subtitle": "Optionnel – nous te rappellerons au bon moment.",
+  "createPlantWateringIntervalLabel": "Fréquence d'arrosage",
+  "createPlantLastWateredLabel": "Dernier arrosage",
+  "createPlantNotYetWatered": "Pas encore sélectionné",
+  "createPlantPickDate": "Choisir une date",
+  "createPlantClearDate": "Supprimer",
+  "createPlantDaysUnit": "jours",
+
+  "createPlantStep3Title": "Fertilises-tu ta plante ?",
+  "createPlantStep3Subtitle": "Optionnel – si tu fertilises, on peut te le rappeler.",
+  "createPlantFertilizingToggle": "Fertiliser la plante",
+  "createPlantFertilizingIntervalLabel": "Fréquence de fertilisation",
+  "createPlantLastFertilizedLabel": "Dernière fertilisation",
+  "createPlantWeeksUnit": "semaines",
+
+  "createPlantStep4Title": "Où se trouve ta plante ?",
+  "createPlantStep4Subtitle": "Choisis un emplacement ou crées-en un d'abord.",
+  "createPlantNoLocations": "Aucun emplacement.\nCrée d'abord un emplacement.",
+
+  "createPlantStep5Title": "Autre chose ?",
+  "createPlantStep5Subtitle": "Ajoute optionnellement une photo et des notes.",
+  "createPlantPhotoLabel": "Ajouter une photo",
+  "createPlantPhotoChange": "Changer la photo",
+  "createPlantNotesHint": "Notes (optionnel) …",
+  "createPlantSaveButton": "Ajouter la plante",
+
+  "createPlantToastName": "Donne un nom à ta plante.",
+  "createPlantToastLocation": "Choisis un emplacement.",
+
+  "weatherSettingsTitle": "Localisation météo",
+  "weatherSettingsDynamic": "GPS (dynamique)",
+  "weatherSettingsStatic": "Lieu fixe",
+  "weatherSettingsDynamicSubtitle": "La météo est chargée selon ta position GPS actuelle.",
+  "weatherSettingsStaticSubtitle": "La météo est chargée pour un lieu fixe.",
+  "weatherSettingsPickOnMap": "Choisir sur la carte",
+  "weatherSettingsNoLocationSet": "Aucun lieu sélectionné",
+  "mapPickerTitle": "Choisir un lieu",
+  "mapPickerConfirm": "Utiliser ce lieu",
+  "mapPickerSearching": "Recherche du lieu …",
+
+  "noLocation": "Sans emplacement",
+  "noLocationHint": "Sans emplacement",
+  "unknownLocation": "Inconnu",
+  "errorPrefix": "Erreur : {message}",
+  "@errorPrefix": {
+    "placeholders": { "message": { "type": "String" } }
+  },
+
+  "tabChat": "Planty",
+
+  "chatTitle": "Assistant Plantes",
+  "chatPlaceholder": "Pose-moi une question sur tes plantes …",
+  "chatEmptyTitle": "Assistant Plantes",
+  "chatEmptySubtitle": "Demande-moi tout sur les soins, le diagnostic ou l'identification des plantes. Tu peux aussi joindre des photos.",
+  "chatAddImage": "Ajouter une image",
+  "chatErrorMessage": "Oups, une erreur s'est produite. Réessaie.",
+
+  "settingsSeasonalReminders": "Rappels saisonniers",
+  "settingsSeasonalSubtitle": "Conseils lors des changements de saison (hiver/été)",
+  "settingsAiChat": "Chat IA",
+  "settingsAiChatSubtitle": "Assistant plantes via Claude AI",
+
+  "plantDetailCareTab": "Conseils",
+  "plantDetailCareLoading": "Chargement des conseils …",
+  "plantDetailCareError": "Données non disponibles",
+  "plantDetailCareDescription": "Description",
+  "plantDetailCareSunlight": "Lumière",
+  "plantDetailCareMaintenance": "Entretien",
+  "plantDetailCarePruning": "Période de taille",
+
+  "locationRecommendationsTitle": "Plantes recommandées",
+  "locationRecommendationsSubtitle": "Ces types de plantes prospèrent particulièrement bien à cet emplacement."
+}

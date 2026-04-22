@@ -1,6 +1,4 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hive_flutter/hive_flutter.dart';
-import '../../../core/notifications/notification_service.dart';
 import '../../../data/repositories/repository_providers.dart';
 
 class NotificationSettings {

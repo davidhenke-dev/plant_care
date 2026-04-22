@@ -26,6 +26,7 @@ void main() async {
   await Hive.openBox<Plant>('plants');
   await Hive.openBox<WateringTask>('watering_tasks');
   await Hive.openBox('settings');
+  await Hive.openBox<String>('calendar_events');
 
   await initializeDateFormatting('de', null);
 

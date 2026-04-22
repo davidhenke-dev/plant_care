@@ -1,0 +1,200 @@
+{
+  "@@locale": "de",
+
+  "tabHome": "Home",
+  "tabPlants": "Pflanzen",
+  "tabLocations": "Standorte",
+
+  "settingsTitle": "Einstellungen",
+  "settingsAppearance": "Erscheinungsbild",
+  "settingsDesign": "Design",
+  "settingsThemeSystem": "System",
+  "settingsThemeLight": "Hell",
+  "settingsThemeDark": "Dunkel",
+  "settingsReminders": "Erinnerungen",
+  "settingsPushNotifications": "Push-Benachrichtigungen",
+  "settingsPushSubtitle": "Tägliche Gieß-Erinnerung",
+  "settingsCalendar": "Apple Calendar",
+  "settingsCalendarSubtitle": "Gieß-Termine in Kalender eintragen",
+  "settingsLanguage": "Sprache",
+  "settingsLanguageSubtitle": "App-Sprache ändern",
+
+  "homeTodayTitle": "Heute",
+  "homeNeedsWatering": "Zu gießen",
+  "homeNeedsFertilizing": "Zu düngen",
+  "homeAllDone": "Alles erledigt! 🎉",
+  "homeNothingToDo": "Heute gibt es nichts zu tun.",
+  "homeWeatherNow": "Jetzt",
+  "homeWeatherNowNight": "Jetzt (Nacht)",
+  "homeWeatherTonight": "Heute Nacht",
+  "homeWeatherTomorrow": "Tagsüber",
+
+  "plantsTitle": "Pflanzen",
+  "plantsEmpty": "Noch keine Pflanzen",
+  "plantsEmptyHint": "Tippe auf + um eine anzulegen",
+  "plantsDeleteTitle": "Pflanze löschen",
+  "plantsDeleteMessage": "Möchtest du \"{name}\" wirklich löschen?",
+  "@plantsDeleteMessage": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "plantsNeedsWateringToday": "Muss heute gegossen werden",
+  "plantsWateringInterval": "Alle {days} Tage",
+  "@plantsWateringInterval": {
+    "placeholders": { "days": { "type": "int" } }
+  },
+
+  "locationsTitle": "Standorte",
+  "locationsEmpty": "Noch keine Standorte",
+  "locationsEmptyHint": "Tippe auf + um einen anzulegen",
+  "locationsDeleteTitle": "Standort löschen",
+  "locationsDeleteMessage": "Möchtest du \"{name}\" wirklich löschen?",
+  "@locationsDeleteMessage": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+
+  "locationDetailTitle": "Standort",
+  "locationDetailPlantsTitle": "Pflanzen hier",
+  "locationDetailNoPlantsHint": "Keine Pflanzen an diesem Standort.",
+  "locationDetailReassignButton": "Umziehen",
+  "locationDetailReassignTitle": "Neuen Standort wählen",
+  "locationFieldName": "Name",
+  "locationFieldLight": "Licht",
+  "locationFieldHumidity": "Feuchtigkeit",
+  "locationFieldDraft": "Zugluft",
+  "locationFieldHeated": "Geheizt im Winter",
+  "locationLightFull": "☀️ Sonnig",
+  "locationLightPartial": "⛅ Halbschattig",
+  "locationLightShade": "🌥 Schattig",
+  "locationHumidityDry": "🏜 Trocken",
+  "locationHumidityModerate": "🌤 Moderat",
+  "locationHumidityHumid": "💧 Feucht",
+  "locationDrafty": "Zugluft",
+  "locationUnheated": "Ungeheizt",
+  "yes": "Ja",
+  "no": "Nein",
+
+  "plantDetailInfoTab": "Info",
+  "plantDetailLocationTab": "Standort",
+  "plantDetailPhotosTab": "Fotos",
+  "plantDetailWateringInterval": "Gießintervall",
+  "plantDetailLastWatered": "Zuletzt gegossen",
+  "plantDetailNextWatering": "Nächste Bewässerung",
+  "plantDetailNotes": "Notizen",
+  "plantDetailFertilizingInterval": "Düngeintervall",
+  "plantDetailLastFertilized": "Zuletzt gedüngt",
+  "plantDetailNextFertilizing": "Nächste Düngung",
+  "plantDetailNeverWatered": "Noch nie",
+  "plantDetailMarkWatered": "Als gegossen markieren 💧",
+  "plantDetailMarkFertilized": "Als gedüngt markieren 🌱",
+  "plantDetailNoPhoto": "Kein Foto vorhanden",
+  "plantDetailChangePhoto": "Foto ändern",
+  "plantDetailLocationNotFound": "Standort nicht gefunden",
+  "plantDetailEveryNWeeks": "Alle {weeks} Wochen",
+  "@plantDetailEveryNWeeks": {
+    "placeholders": { "weeks": { "type": "int" } }
+  },
+  "plantDetailEveryNDays": "Alle {days} Tage",
+  "@plantDetailEveryNDays": {
+    "placeholders": { "days": { "type": "int" } }
+  },
+
+  "wateringCardNeverWatered": "Noch nie gegossen",
+  "wateringCardInterval": "Intervall: alle {days} Tage",
+  "@wateringCardInterval": {
+    "placeholders": { "days": { "type": "int" } }
+  },
+  "fertilizingCardNeverFertilized": "Noch nie gedüngt",
+  "fertilizingCardInterval": "Intervall: alle {weeks} Wochen",
+  "@fertilizingCardInterval": {
+    "placeholders": { "weeks": { "type": "int" } }
+  },
+
+  "actionCancel": "Abbrechen",
+  "actionDelete": "Löschen",
+  "actionSave": "Speichern",
+  "actionNext": "Weiter",
+  "actionDone": "Fertig",
+
+  "createPlantStep1Title": "Wie heißt deine\nneue Pflanze?",
+  "createPlantStep1Subtitle": "Such sie in unserer Datenbank – wir füllen den Rest für dich aus.",
+  "createPlantNameHint": "z. B. Monstera, Kaktus, Rosmarin …",
+  "createPlantSearchButton": "In Pflanzendatenbank suchen",
+  "createPlantSearchHint": "Pflanze suchen …",
+  "createPlantOrManualLabel": "oder manuell eingeben",
+  "createPlantOrDivider": "oder",
+  "createPlantManualEntry": "Manuell eingeben",
+
+  "createPlantStep2Title": "Wann hast du zuletzt gegossen?",
+  "createPlantStep2Subtitle": "Optional – wir erinnern dich dann genau zum richtigen Zeitpunkt.",
+  "createPlantWateringIntervalLabel": "Gieß-Intervall",
+  "createPlantLastWateredLabel": "Zuletzt gegossen",
+  "createPlantNotYetWatered": "Noch nicht gewählt",
+  "createPlantPickDate": "Datum wählen",
+  "createPlantClearDate": "Entfernen",
+  "createPlantDaysUnit": "Tage",
+
+  "createPlantStep3Title": "Düngst du deine Pflanze?",
+  "createPlantStep3Subtitle": "Optional – falls du düngst, können wir dich daran erinnern.",
+  "createPlantFertilizingToggle": "Pflanze düngen",
+  "createPlantFertilizingIntervalLabel": "Dünge-Intervall",
+  "createPlantLastFertilizedLabel": "Zuletzt gedüngt",
+  "createPlantWeeksUnit": "Wochen",
+
+  "createPlantStep4Title": "Wo steht deine Pflanze?",
+  "createPlantStep4Subtitle": "Wähle einen Standort aus oder lege zuerst einen an.",
+  "createPlantNoLocations": "Noch keine Standorte vorhanden.\nLege zuerst einen Standort an.",
+
+  "createPlantStep5Title": "Noch etwas?",
+  "createPlantStep5Subtitle": "Füge optional ein Foto und Notizen hinzu.",
+  "createPlantPhotoLabel": "Foto hinzufügen",
+  "createPlantPhotoChange": "Foto ändern",
+  "createPlantNotesHint": "Notizen (optional) …",
+  "createPlantSaveButton": "Pflanze anlegen",
+
+  "createPlantToastName": "Bitte gib deiner Pflanze einen Namen.",
+  "createPlantToastLocation": "Bitte wähle einen Standort aus.",
+
+  "weatherSettingsTitle": "Wetterstandort",
+  "weatherSettingsDynamic": "GPS (dynamisch)",
+  "weatherSettingsStatic": "Fester Ort",
+  "weatherSettingsDynamicSubtitle": "Wetter wird anhand deines aktuellen GPS-Standorts geladen.",
+  "weatherSettingsStaticSubtitle": "Wetter wird für einen festen Ort geladen.",
+  "weatherSettingsPickOnMap": "Auf Karte wählen",
+  "weatherSettingsNoLocationSet": "Kein Ort gewählt",
+  "mapPickerTitle": "Ort wählen",
+  "mapPickerConfirm": "Diesen Ort verwenden",
+  "mapPickerSearching": "Ort wird ermittelt …",
+
+  "noLocation": "Kein Standort",
+  "noLocationHint": "Ohne Standort",
+  "unknownLocation": "Unbekannt",
+  "errorPrefix": "Fehler: {message}",
+  "@errorPrefix": {
+    "placeholders": { "message": { "type": "String" } }
+  },
+
+  "tabChat": "Planty",
+
+  "chatTitle": "Pflanzen-Assistent",
+  "chatPlaceholder": "Frag mich etwas über deine Pflanzen …",
+  "chatEmptyTitle": "Pflanzen-Assistent",
+  "chatEmptySubtitle": "Frag mich alles über Pflege, Diagnose oder die Bestimmung deiner Pflanzen. Du kannst auch Fotos anhängen.",
+  "chatAddImage": "Bild hinzufügen",
+  "chatErrorMessage": "Ups, etwas ist schiefgelaufen. Bitte versuche es erneut.",
+
+  "settingsSeasonalReminders": "Saisonale Erinnerungen",
+  "settingsSeasonalSubtitle": "Tipps bei Saisonwechsel (Winter/Sommer)",
+  "settingsAiChat": "KI-Chat",
+  "settingsAiChatSubtitle": "Pflanzenassistent via Claude AI",
+
+  "plantDetailCareTab": "Pflege-Tipps",
+  "plantDetailCareLoading": "Tipps werden geladen …",
+  "plantDetailCareError": "Keine Daten verfügbar",
+  "plantDetailCareDescription": "Beschreibung",
+  "plantDetailCareSunlight": "Licht",
+  "plantDetailCareMaintenance": "Pflegeaufwand",
+  "plantDetailCarePruning": "Schnittzeit",
+
+  "locationRecommendationsTitle": "Empfohlene Pflanzen",
+  "locationRecommendationsSubtitle": "Diese Pflanzentypen gedeihen an diesem Standort besonders gut."
+}

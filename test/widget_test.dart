@@ -10,6 +10,8 @@ import 'package:plant_care/data/repositories/location_repository.dart';
 import 'package:plant_care/data/repositories/plant_repository.dart';
 import 'package:plant_care/data/repositories/repository_providers.dart';
 import 'package:plant_care/data/repositories/watering_task_repository.dart';
+import 'package:plant_care/core/weather/weather_data.dart';
+import 'package:plant_care/features/home/application/weather_notifier.dart';
 import 'package:plant_care/features/home/presentation/home_screen.dart';
 import 'package:plant_care/features/locations/presentation/locations_screen.dart';
 import 'package:plant_care/features/plants/presentation/plants_screen.dart';
@@ -56,6 +58,7 @@ void main() {
           ),
           settingsBoxProvider
               .overrideWithValue(Hive.box('widget_test_settings')),
+          weatherProvider.overrideWith(() => _FakeWeatherNotifier()),
         ],
       );
 
@@ -96,4 +99,15 @@ void main() {
     await tester.pump();
     expect(find.text('Standorte'), findsOneWidget);
   });
+}
+
+class _FakeWeatherNotifier extends WeatherNotifier {
+  @override
+  Future<WeatherData> build() async => const WeatherData(
+        currentTemp: 18,
+        weatherCode: 0,
+        isDay: true,
+        forecastTemp: 12,
+        forecastCode: 1,
+      );
 }

@@ -3,9 +3,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:path_provider/path_provider.dart';
+import '../../../core/plant_search/plant_care_details.dart';
+import '../../../core/theme/app_colors.dart';
 import '../../../data/models/location.dart';
 import '../../../data/repositories/repository_providers.dart';
+import '../../../l10n/app_localizations.dart';
+import '../../../shared/widgets/plant_image.dart';
 import '../application/plant_notifier.dart';
+import 'edit_plant_sheet.dart';
 
 class PlantDetailScreen extends ConsumerStatefulWidget {
   final String plantId;
@@ -21,6 +27,7 @@ class _PlantDetailScreenState extends ConsumerState<PlantDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     final plant = ref
         .watch(plantNotifierProvider)
         .valueOrNull
@@ -37,6 +44,13 @@ class _PlantDetailScreenState extends ConsumerState<PlantDetailScreen> {
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
         middle: Text(plant.name),
+        trailing: CupertinoButton(
+          padding: EdgeInsets.zero,
+          onPressed: () => Navigator.of(context).push(
+            CupertinoPageRoute(builder: (_) => EditPlantSheet(plant: plant)),
+          ),
+          child: const Icon(CupertinoIcons.pencil, size: 22),
+        ),
       ),
       child: SafeArea(
         child: Column(
@@ -49,18 +63,22 @@ class _PlantDetailScreenState extends ConsumerState<PlantDetailScreen> {
                 onValueChanged: (val) {
                   if (val != null) setState(() => _selectedTab = val);
                 },
-                children: const {
+                children: {
                   0: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 8),
-                    child: Text('Info'),
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: Text(l.plantDetailInfoTab),
                   ),
                   1: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 8),
-                    child: Text('Standort'),
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: Text(l.plantDetailLocationTab),
                   ),
                   2: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 8),
-                    child: Text('Fotos'),
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: Text(l.plantDetailCareTab),
+                  ),
+                  3: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: Text(l.plantDetailPhotosTab),
                   ),
                 },
               ),
@@ -70,6 +88,7 @@ class _PlantDetailScreenState extends ConsumerState<PlantDetailScreen> {
               child: switch (_selectedTab) {
                 0 => _InfoTab(plant: plant),
                 1 => _StandortTab(locationId: plant.locationId),
+                2 => _CareTab(plantName: plant.name),
                 _ => _FotosTab(plantId: plant.id),
               },
             ),
@@ -89,9 +108,14 @@ class _InfoTab extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final dateFormat = DateFormat('dd.MM.yyyy');
+    final l = AppLocalizations.of(context);
+    final locale = Localizations.localeOf(context).languageCode;
+    final dateFormat = DateFormat('dd.MM.yyyy', locale);
     final nextWatering = plant.lastWateredAt
         ?.add(Duration(days: plant.wateringIntervalDays as int));
+    final fertilizingWeeks = plant.fertilizingIntervalWeeks as int?;
+    final nextFertilizing = plant.lastFertilizedAt
+        ?.add(Duration(days: (fertilizingWeeks ?? 0) * 7));
 
     return ListView(
       padding: const EdgeInsets.fromLTRB(16, 0, 16, 40),
@@ -99,34 +123,53 @@ class _InfoTab extends ConsumerWidget {
         if (plant.imagePath != null) ...[
           ClipRRect(
             borderRadius: BorderRadius.circular(16),
-            child: Image.file(
-              File(plant.imagePath as String),
+            child: PlantImage(
+              imagePath: plant.imagePath as String?,
               height: 220,
               width: double.infinity,
-              fit: BoxFit.cover,
             ),
           ),
           const SizedBox(height: 20),
         ],
-        _infoCard([
+        _infoCard(context, [
           _InfoRow(
-            label: 'Gießintervall',
-            value: 'Alle ${plant.wateringIntervalDays} Tage',
+            label: l.plantDetailWateringInterval,
+            value: l.plantDetailEveryNDays(plant.wateringIntervalDays as int),
           ),
           _InfoRow(
-            label: 'Zuletzt gegossen',
+            label: l.plantDetailLastWatered,
             value: plant.lastWateredAt != null
                 ? dateFormat.format(plant.lastWateredAt as DateTime)
-                : 'Noch nie',
+                : l.plantDetailNeverWatered,
           ),
           if (nextWatering != null)
             _InfoRow(
-              label: 'Nächste Bewässerung',
+              label: l.plantDetailNextWatering,
               value: dateFormat.format(nextWatering as DateTime),
             ),
           if ((plant.notes as String?)?.isNotEmpty == true)
-            _InfoRow(label: 'Notizen', value: plant.notes as String),
+            _InfoRow(label: l.plantDetailNotes, value: plant.notes as String),
         ]),
+        if (fertilizingWeeks != null) ...[
+          const SizedBox(height: 16),
+          _infoCard(context, [
+            _InfoRow(
+              label: l.plantDetailFertilizingInterval,
+              value: l.plantDetailEveryNWeeks(fertilizingWeeks),
+            ),
+            _InfoRow(
+              label: l.plantDetailLastFertilized,
+              value: plant.lastFertilizedAt != null
+                  ? dateFormat.format(plant.lastFertilizedAt as DateTime)
+                  : l.plantDetailNeverWatered,
+            ),
+            if (nextFertilizing != null)
+              _InfoRow(
+                label: l.plantDetailNextFertilizing,
+                value: dateFormat.format(nextFertilizing),
+              ),
+          ]),
+        ],
         if (plant.needsWateringToday as bool) ...[
           const SizedBox(height: 24),
           SizedBox(
@@ -135,7 +178,23 @@ class _InfoTab extends ConsumerWidget {
               onPressed: () => ref
                   .read(plantNotifierProvider.notifier)
                   .markAsWatered(plant.id as String),
-              child: const Text('Als gegossen markieren 💧'),
+              child: Text(l.plantDetailMarkWatered),
+            ),
+          ),
+        ],
+        if (plant.needsFertilizingToday as bool) ...[
+          const SizedBox(height: 12),
+          SizedBox(
+            width: double.infinity,
+            child: CupertinoButton(
+              color: CupertinoColors.systemOrange.withValues(alpha: 0.15),
+              onPressed: () => ref
+                  .read(plantNotifierProvider.notifier)
+                  .markAsFertilized(plant.id as String),
+              child: Text(
+                l.plantDetailMarkFertilized,
+                style: const TextStyle(color: CupertinoColors.systemOrange),
+              ),
             ),
           ),
         ],
@@ -147,54 +206,147 @@ class _InfoTab extends ConsumerWidget {
 // ── Standort Tab ──────────────────────────────────────────────────────────────
 
 class _StandortTab extends ConsumerWidget {
-  final String locationId;
+  final String? locationId;
 
   const _StandortTab({required this.locationId});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l = AppLocalizations.of(context);
+
+    if (locationId == null) {
+      return Center(child: Text(l.noLocation));
+    }
+
     return FutureBuilder<Location?>(
-      future: ref.read(locationRepositoryProvider).getById(locationId),
+      future: ref.read(locationRepositoryProvider).getById(locationId!),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return const Center(child: CupertinoActivityIndicator());
         }
         final loc = snapshot.data;
         if (loc == null) {
-          return const Center(child: Text('Standort nicht gefunden'));
+          return Center(child: Text(l.plantDetailLocationNotFound));
         }
+
+        final lightLabel = switch (loc.light) {
+          LightLevel.fullSun => l.locationLightFull,
+          LightLevel.partialSun => l.locationLightPartial,
+          LightLevel.shade => l.locationLightShade,
+        };
+        final humidityLabel = switch (loc.humidity) {
+          HumidityLevel.dry => l.locationHumidityDry,
+          HumidityLevel.moderate => l.locationHumidityModerate,
+          HumidityLevel.humid => l.locationHumidityHumid,
+        };
 
         return ListView(
           padding: const EdgeInsets.fromLTRB(16, 0, 16, 40),
           children: [
-            _infoCard([
-              _InfoRow(label: 'Name', value: loc.name),
-              _InfoRow(label: 'Licht', value: _lightLabel(loc.light)),
+            _infoCard(context, [
+              _InfoRow(label: l.locationFieldName, value: loc.name),
+              _InfoRow(label: l.locationFieldLight, value: lightLabel),
+              _InfoRow(label: l.locationFieldHumidity, value: humidityLabel),
               _InfoRow(
-                  label: 'Feuchtigkeit', value: _humidityLabel(loc.humidity)),
+                  label: l.locationFieldDraft,
+                  value: loc.isDrafty ? l.yes : l.no),
               _InfoRow(
-                  label: 'Zugluft', value: loc.isDrafty ? 'Ja' : 'Nein'),
-              _InfoRow(
-                  label: 'Geheizt im Winter',
-                  value: loc.isHeatedInWinter ? 'Ja' : 'Nein'),
+                  label: l.locationFieldHeated,
+                  value: loc.isHeatedInWinter ? l.yes : l.no),
             ]),
           ],
         );
       },
     );
   }
+}
 
-  String _lightLabel(LightLevel l) => switch (l) {
-        LightLevel.fullSun => '☀️ Sonnig',
-        LightLevel.partialSun => '⛅ Halbschattig',
-        LightLevel.shade => '🌥 Schattig',
-      };
+// ── Care Tips Tab ─────────────────────────────────────────────────────────────
 
-  String _humidityLabel(HumidityLevel h) => switch (h) {
-        HumidityLevel.dry => '🏜 Trocken',
-        HumidityLevel.moderate => '🌤 Moderat',
-        HumidityLevel.humid => '💧 Feucht',
-      };
+class _CareTab extends ConsumerWidget {
+  final String plantName;
+
+  const _CareTab({required this.plantName});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l = AppLocalizations.of(context);
+    return FutureBuilder<PlantCareDetails?>(
+      future: ref
+          .read(plantSearchServiceProvider)
+          .getCareDetails(plantName),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const CupertinoActivityIndicator(),
+                const SizedBox(height: 12),
+                Text(l.plantDetailCareLoading,
+                    style: const TextStyle(color: CupertinoColors.systemGrey)),
+              ],
+            ),
+          );
+        }
+
+        final details = snapshot.data;
+        if (details == null) {
+          return Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(CupertinoIcons.info_circle,
+                    size: 44, color: CupertinoColors.systemGrey3),
+                const SizedBox(height: 12),
+                Text(l.plantDetailCareError,
+                    style: const TextStyle(color: CupertinoColors.systemGrey)),
+              ],
+            ),
+          );
+        }
+
+        final rows = <Widget>[];
+
+        if (details.description != null && details.description!.isNotEmpty) {
+          rows.add(_InfoRow(
+            label: l.plantDetailCareDescription,
+            value: details.description!,
+          ));
+        }
+        if (details.sunlight.isNotEmpty) {
+          rows.add(_InfoRow(
+            label: l.plantDetailCareSunlight,
+            value: details.sunlight.join(', '),
+          ));
+        }
+        if (details.careLevel != null) {
+          rows.add(_InfoRow(
+            label: l.plantDetailCareMaintenance,
+            value: details.careLevel!,
+          ));
+        }
+        if (details.pruningMonths.isNotEmpty) {
+          rows.add(_InfoRow(
+            label: l.plantDetailCarePruning,
+            value: details.pruningMonths.join(', '),
+          ));
+        }
+
+        if (rows.isEmpty) {
+          return Center(
+            child: Text(l.plantDetailCareError,
+                style: const TextStyle(color: CupertinoColors.systemGrey)),
+          );
+        }
+
+        return ListView(
+          padding: const EdgeInsets.fromLTRB(16, 0, 16, 40),
+          children: [_infoCard(context, rows)],
+        );
+      },
+    );
+  }
 }
 
 // ── Fotos Tab ─────────────────────────────────────────────────────────────────
@@ -206,6 +358,7 @@ class _FotosTab extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l = AppLocalizations.of(context);
     final plant = ref
         .watch(plantNotifierProvider)
         .valueOrNull
@@ -220,28 +373,25 @@ class _FotosTab extends ConsumerWidget {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(16),
               child: plant?.imagePath != null
-                  ? Image.file(
-                      File(plant!.imagePath!),
+                  ? PlantImage(
+                      imagePath: plant!.imagePath,
                       width: double.infinity,
-                      fit: BoxFit.cover,
                     )
                   : Container(
                       width: double.infinity,
                       decoration: BoxDecoration(
-                        color: CupertinoColors.systemGrey6,
+                        color: kCardBackground.resolveFrom(context),
                         borderRadius: BorderRadius.circular(16),
                       ),
-                      child: const Column(
+                      child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(CupertinoIcons.camera,
+                          const Icon(CupertinoIcons.camera,
                               size: 48, color: CupertinoColors.systemGrey),
-                          SizedBox(height: 12),
-                          Text(
-                            'Kein Foto vorhanden',
-                            style:
-                                TextStyle(color: CupertinoColors.systemGrey),
-                          ),
+                          const SizedBox(height: 12),
+                          Text(l.plantDetailNoPhoto,
+                              style: const TextStyle(
+                                  color: CupertinoColors.systemGrey)),
                         ],
                       ),
                     ),
@@ -251,7 +401,7 @@ class _FotosTab extends ConsumerWidget {
           SizedBox(
             width: double.infinity,
             child: CupertinoButton(
-              color: CupertinoColors.systemGrey6,
+              color: kCardBackground.resolveFrom(context),
               onPressed: () async {
                 final picker = ImagePicker();
                 final picked = await picker.pickImage(
@@ -260,14 +410,15 @@ class _FotosTab extends ConsumerWidget {
                   imageQuality: 85,
                 );
                 if (picked != null) {
+                  final savedPath = await _copyToDocuments(picked.path);
                   await ref
                       .read(plantNotifierProvider.notifier)
-                      .updateImagePath(plantId, picked.path);
+                      .updateImagePath(plantId, savedPath);
                 }
               },
-              child: const Text(
-                'Foto ändern',
-                style: TextStyle(color: CupertinoColors.label),
+              child: Text(
+                l.plantDetailChangePhoto,
+                style: const TextStyle(color: CupertinoColors.label),
               ),
             ),
           ),
@@ -277,16 +428,30 @@ class _FotosTab extends ConsumerWidget {
   }
 }
 
+Future<String> _copyToDocuments(String sourcePath) async {
+  try {
+    final dir = await getApplicationDocumentsDirectory();
+    final filename = 'plant_img_${DateTime.now().millisecondsSinceEpoch}.jpg';
+    final dest = File('${dir.path}/$filename');
+    await File(sourcePath).copy(dest.path);
+    return dest.path;
+  } catch (_) {
+    return sourcePath;
+  }
+}
+
 // ── Shared Helpers ────────────────────────────────────────────────────────────
 
-Widget _infoCard(List<Widget> rows) {
+Widget _infoCard(BuildContext context, List<Widget> rows) {
   return Container(
     decoration: BoxDecoration(
-      color: CupertinoColors.systemBackground,
+      color: kCardBackground.resolveFrom(context),
       borderRadius: BorderRadius.circular(16),
       boxShadow: [
         BoxShadow(
-          color: CupertinoColors.systemGrey.withValues(alpha: 0.1),
+          color: CupertinoColors.systemGrey
+              .resolveFrom(context)
+              .withValues(alpha: 0.1),
           blurRadius: 8,
           offset: const Offset(0, 2),
         ),
@@ -294,7 +459,6 @@ Widget _infoCard(List<Widget> rows) {
     ),
     child: Column(
       children: rows
-          .map((r) => r)
           .expand((r) => [r, const _Divider()])
           .toList()
         ..removeLast(),
@@ -314,18 +478,13 @@ class _InfoRow extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       child: Row(
         children: [
-          Text(
-            label,
-            style: const TextStyle(
-              color: CupertinoColors.systemGrey,
-              fontSize: 14,
-            ),
-          ),
+          Text(label,
+              style: const TextStyle(
+                  color: CupertinoColors.systemGrey, fontSize: 14)),
           const Spacer(),
-          Text(
-            value,
-            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-          ),
+          Text(value,
+              style:
+                  const TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
         ],
       ),
     );
@@ -340,7 +499,7 @@ class _Divider extends StatelessWidget {
     return Container(
       height: 0.5,
       margin: const EdgeInsets.only(left: 16),
-      color: CupertinoColors.separator,
+      color: CupertinoColors.separator.resolveFrom(context),
     );
   }
 }

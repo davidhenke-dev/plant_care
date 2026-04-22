@@ -39,8 +39,18 @@ class PlantRepository implements BaseRepository<Plant> {
   }
 
   Future<List<Plant>> getPlantsNeedingWater() async {
-    return _box.values
-        .where((p) => p.needsWateringToday)
-        .toList();
+    return _box.values.where((p) => p.needsWateringToday).toList();
+  }
+
+  Future<List<Plant>> getPlantsNeedingFertilizing() async {
+    return _box.values.where((p) => p.needsFertilizingToday).toList();
+  }
+
+  Future<void> clearLocationId(String locationId) async {
+    final affected = _box.values.where((p) => p.locationId == locationId);
+    for (final plant in affected) {
+      plant.locationId = null;
+      await plant.save();
+    }
   }
 }

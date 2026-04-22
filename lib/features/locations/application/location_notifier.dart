@@ -3,6 +3,7 @@ import 'package:uuid/uuid.dart';
 import '../../../data/models/location.dart';
 import '../../../data/repositories/location_repository.dart';
 import '../../../data/repositories/repository_providers.dart';
+import '../../plants/application/plant_notifier.dart';
 
 class LocationNotifier extends AsyncNotifier<List<Location>> {
   late LocationRepository _repository;
@@ -34,8 +35,31 @@ class LocationNotifier extends AsyncNotifier<List<Location>> {
   }
 
   Future<void> deleteLocation(String id) async {
+    final plantRepo = ref.read(plantRepositoryProvider);
+    await plantRepo.clearLocationId(id);
     await _repository.delete(id);
     ref.invalidateSelf();
+    ref.invalidate(plantNotifierProvider);
+  }
+
+  Future<void> updateLocation({
+    required String id,
+    required String name,
+    required LightLevel lightLevel,
+    required HumidityLevel humidityLevel,
+    required bool isDrafty,
+    required bool isHeatedInWinter,
+  }) async {
+    final location = await _repository.getById(id);
+    if (location != null) {
+      location.name = name;
+      location.lightLevel = lightLevel.index;
+      location.humidityLevel = humidityLevel.index;
+      location.isDrafty = isDrafty;
+      location.isHeatedInWinter = isHeatedInWinter;
+      await location.save();
+      ref.invalidateSelf();
+    }
   }
 }
 

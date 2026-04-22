@@ -60,8 +60,8 @@ void main() {
     await repo.save(frischGegossen);
 
     final state = await container.read(homeNotifierProvider.future);
-    expect(state.length, 1);
-    expect(state.first.name, 'Monstera');
+    expect(state.needsWatering.length, 1);
+    expect(state.needsWatering.first.name, 'Monstera');
   });
 
   test('markAsWatered entfernt Pflanze aus der Liste', () async {
@@ -82,6 +82,6 @@ void main() {
     await notifier.markAsWatered('p3');
 
     final updated = await container.read(homeNotifierProvider.future);
-    expect(updated, isEmpty);
+    expect(updated.needsWatering, isEmpty);
   });
 }

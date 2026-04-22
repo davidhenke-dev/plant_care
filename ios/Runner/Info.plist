@@ -66,5 +66,11 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>PlantCare verwendet deinen Standort, um das aktuelle Wetter anzuzeigen.</string>
+	<key>NSCalendarsFullAccessUsageDescription</key>
+	<string>PlantCare erstellt Gieß-Erinnerungen in deinem Kalender.</string>
+	<key>NSCalendarsWriteOnlyAccessUsageDescription</key>
+	<string>PlantCare erstellt Gieß-Erinnerungen in deinem Kalender.</string>
 </dict>
 </plist>

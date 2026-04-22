@@ -1,8 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../data/repositories/repository_providers.dart';
+import '../../../l10n/app_localizations.dart';
 import '../application/plant_notifier.dart';
-import 'add_plant_sheet.dart';
+import 'create_plant_flow.dart';
 import 'plant_card.dart';
 import 'plant_detail_screen.dart';
 
@@ -15,15 +16,16 @@ class PlantsScreen extends ConsumerWidget {
     String id,
     String name,
   ) async {
+    final l = AppLocalizations.of(context);
     await showCupertinoDialog(
       context: context,
       builder: (ctx) => CupertinoAlertDialog(
-        title: const Text('Pflanze löschen'),
-        content: Text('Möchtest du "$name" wirklich löschen?'),
+        title: Text(l.plantsDeleteTitle),
+        content: Text(l.plantsDeleteMessage(name)),
         actions: [
           CupertinoDialogAction(
             onPressed: () => Navigator.of(ctx).pop(),
-            child: const Text('Abbrechen'),
+            child: Text(l.actionCancel),
           ),
           CupertinoDialogAction(
             isDestructiveAction: true,
@@ -31,7 +33,7 @@ class PlantsScreen extends ConsumerWidget {
               ref.read(plantNotifierProvider.notifier).deletePlant(id);
               Navigator.of(ctx).pop();
             },
-            child: const Text('Löschen'),
+            child: Text(l.actionDelete),
           ),
         ],
       ),
@@ -40,17 +42,17 @@ class PlantsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l = AppLocalizations.of(context);
     final plantsAsync = ref.watch(plantNotifierProvider);
     final locationRepo = ref.read(locationRepositoryProvider);
 
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
-        middle: const Text('Pflanzen'),
+        middle: Text(l.plantsTitle),
         trailing: CupertinoButton(
           padding: EdgeInsets.zero,
-          onPressed: () => showCupertinoModalPopup(
-            context: context,
-            builder: (_) => AddPlantSheet(),
+          onPressed: () => Navigator.of(context).push(
+            CupertinoPageRoute(builder: (_) => const CreatePlantFlow()),
           ),
           child: const Icon(CupertinoIcons.add),
         ),
@@ -58,33 +60,22 @@ class PlantsScreen extends ConsumerWidget {
       child: SafeArea(
         child: plantsAsync.when(
           loading: () => const Center(child: CupertinoActivityIndicator()),
-          error: (e, _) => Center(child: Text('Fehler: $e')),
+          error: (e, _) => Center(child: Text(l.errorPrefix(e.toString()))),
           data: (plants) => plants.isEmpty
-              ? const Center(
+              ? Center(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(
-                        CupertinoIcons.leaf_arrow_circlepath,
-                        size: 48,
-                        color: CupertinoColors.systemGrey3,
-                      ),
-                      SizedBox(height: 12),
-                      Text(
-                        'Noch keine Pflanzen',
-                        style: TextStyle(
-                          color: CupertinoColors.systemGrey,
-                          fontSize: 16,
-                        ),
-                      ),
-                      SizedBox(height: 4),
-                      Text(
-                        'Tippe auf + um eine anzulegen',
-                        style: TextStyle(
-                          color: CupertinoColors.systemGrey3,
-                          fontSize: 14,
-                        ),
-                      ),
+                      const Icon(CupertinoIcons.leaf_arrow_circlepath,
+                          size: 48, color: CupertinoColors.systemGrey3),
+                      const SizedBox(height: 12),
+                      Text(l.plantsEmpty,
+                          style: const TextStyle(
+                              color: CupertinoColors.systemGrey, fontSize: 16)),
+                      const SizedBox(height: 4),
+                      Text(l.plantsEmptyHint,
+                          style: const TextStyle(
+                              color: CupertinoColors.systemGrey3, fontSize: 14)),
                     ],
                   ),
                 )
@@ -92,7 +83,7 @@ class PlantsScreen extends ConsumerWidget {
                   future: locationRepo.getAll(),
                   builder: (context, snapshot) {
                     final locationMap = {
-                      for (final l in snapshot.data ?? []) l.id: l.name
+                      for (final loc in snapshot.data ?? []) loc.id: loc.name
                     };
                     return ListView.builder(
                       padding: const EdgeInsets.fromLTRB(16, 16, 16, 100),
@@ -101,8 +92,10 @@ class PlantsScreen extends ConsumerWidget {
                         final plant = plants[index];
                         return PlantCard(
                           plant: plant,
-                          locationName:
-                              locationMap[plant.locationId] ?? 'Unbekannt',
+                          locationName: plant.locationId == null
+                              ? l.noLocation
+                              : (locationMap[plant.locationId] ??
+                                  l.unknownLocation),
                           onTap: () => Navigator.of(context).push(
                             CupertinoPageRoute(
                               builder: (_) =>
@@ -110,11 +103,7 @@ class PlantsScreen extends ConsumerWidget {
                             ),
                           ),
                           onDelete: () => _confirmDelete(
-                            context,
-                            ref,
-                            plant.id,
-                            plant.name,
-                          ),
+                              context, ref, plant.id, plant.name),
                           onWatered: () => ref
                               .read(plantNotifierProvider.notifier)
                               .markAsWatered(plant.id),

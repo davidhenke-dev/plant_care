@@ -63,4 +63,31 @@ void main() {
     final updated = await container.read(locationNotifierProvider.future);
     expect(updated, isEmpty);
   });
+
+  test('updateLocation aktualisiert alle Felder', () async {
+    final notifier = container.read(locationNotifierProvider.notifier);
+
+    await notifier.addLocation(
+      name: 'Wohnzimmer',
+      lightLevel: LightLevel.fullSun,
+      humidityLevel: HumidityLevel.moderate,
+    );
+
+    final locations = await container.read(locationNotifierProvider.future);
+    await notifier.updateLocation(
+      id: locations.first.id,
+      name: 'Schlafzimmer',
+      lightLevel: LightLevel.shade,
+      humidityLevel: HumidityLevel.dry,
+      isDrafty: true,
+      isHeatedInWinter: false,
+    );
+
+    final updated = await container.read(locationNotifierProvider.future);
+    expect(updated.first.name, 'Schlafzimmer');
+    expect(updated.first.light, LightLevel.shade);
+    expect(updated.first.humidity, HumidityLevel.dry);
+    expect(updated.first.isDrafty, isTrue);
+    expect(updated.first.isHeatedInWinter, isFalse);
+  });
 }

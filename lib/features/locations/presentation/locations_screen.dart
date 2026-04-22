@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../l10n/app_localizations.dart';
 import '../application/location_notifier.dart';
 import 'add_location_sheet.dart';
 import 'location_card.dart';
@@ -13,15 +14,16 @@ class LocationsScreen extends ConsumerWidget {
     String id,
     String name,
   ) async {
+    final l = AppLocalizations.of(context);
     await showCupertinoDialog(
       context: context,
       builder: (ctx) => CupertinoAlertDialog(
-        title: const Text('Standort löschen'),
-        content: Text('Möchtest du "$name" wirklich löschen?'),
+        title: Text(l.locationsDeleteTitle),
+        content: Text(l.locationsDeleteMessage(name)),
         actions: [
           CupertinoDialogAction(
             onPressed: () => Navigator.of(ctx).pop(),
-            child: const Text('Abbrechen'),
+            child: Text(l.actionCancel),
           ),
           CupertinoDialogAction(
             isDestructiveAction: true,
@@ -29,7 +31,7 @@ class LocationsScreen extends ConsumerWidget {
               ref.read(locationNotifierProvider.notifier).deleteLocation(id);
               Navigator.of(ctx).pop();
             },
-            child: const Text('Löschen'),
+            child: Text(l.actionDelete),
           ),
         ],
       ),
@@ -38,11 +40,12 @@ class LocationsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l = AppLocalizations.of(context);
     final locationsAsync = ref.watch(locationNotifierProvider);
 
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
-        middle: const Text('Standorte'),
+        middle: Text(l.locationsTitle),
         trailing: CupertinoButton(
           padding: EdgeInsets.zero,
           onPressed: () => showCupertinoModalPopup(
@@ -55,33 +58,22 @@ class LocationsScreen extends ConsumerWidget {
       child: SafeArea(
         child: locationsAsync.when(
           loading: () => const Center(child: CupertinoActivityIndicator()),
-          error: (e, _) => Center(child: Text('Fehler: $e')),
+          error: (e, _) => Center(child: Text(l.errorPrefix(e.toString()))),
           data: (locations) => locations.isEmpty
-              ? const Center(
+              ? Center(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(
-                        CupertinoIcons.map,
-                        size: 48,
-                        color: CupertinoColors.systemGrey3,
-                      ),
-                      SizedBox(height: 12),
-                      Text(
-                        'Noch keine Standorte',
-                        style: TextStyle(
-                          color: CupertinoColors.systemGrey,
-                          fontSize: 16,
-                        ),
-                      ),
-                      SizedBox(height: 4),
-                      Text(
-                        'Tippe auf + um einen anzulegen',
-                        style: TextStyle(
-                          color: CupertinoColors.systemGrey3,
-                          fontSize: 14,
-                        ),
-                      ),
+                      const Icon(CupertinoIcons.map,
+                          size: 48, color: CupertinoColors.systemGrey3),
+                      const SizedBox(height: 12),
+                      Text(l.locationsEmpty,
+                          style: const TextStyle(
+                              color: CupertinoColors.systemGrey, fontSize: 16)),
+                      const SizedBox(height: 4),
+                      Text(l.locationsEmptyHint,
+                          style: const TextStyle(
+                              color: CupertinoColors.systemGrey3, fontSize: 14)),
                     ],
                   ),
                 )
@@ -93,11 +85,7 @@ class LocationsScreen extends ConsumerWidget {
                     return LocationCard(
                       location: location,
                       onDelete: () => _confirmDelete(
-                        context,
-                        ref,
-                        location.id,
-                        location.name,
-                      ),
+                          context, ref, location.id, location.name),
                     );
                   },
                 ),

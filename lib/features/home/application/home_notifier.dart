@@ -4,27 +4,37 @@ import '../../../data/repositories/plant_repository.dart';
 import '../../../data/repositories/repository_providers.dart';
 import '../../plants/application/plant_notifier.dart';
 
-class HomeNotifier extends AsyncNotifier<List<Plant>> {
+class HomeState {
+  final List<Plant> needsWatering;
+  final List<Plant> needsFertilizing;
+
+  const HomeState({
+    required this.needsWatering,
+    required this.needsFertilizing,
+  });
+}
+
+class HomeNotifier extends AsyncNotifier<HomeState> {
   late PlantRepository _repository;
 
   @override
-  Future<List<Plant>> build() async {
-    ref.watch(plantNotifierProvider);
+  Future<HomeState> build() async {
+    await ref.watch(plantNotifierProvider.future);
     _repository = ref.read(plantRepositoryProvider);
-    return _repository.getPlantsNeedingWater();
+    return HomeState(
+      needsWatering: await _repository.getPlantsNeedingWater(),
+      needsFertilizing: await _repository.getPlantsNeedingFertilizing(),
+    );
   }
 
   Future<void> markAsWatered(String id) async {
-    final plant = await _repository.getById(id);
-    if (plant != null) {
-      plant.lastWateredAt = DateTime.now();
-      await plant.save();
-      ref.invalidateSelf();
-    }
+    await ref.read(plantNotifierProvider.notifier).markAsWatered(id);
+  }
+
+  Future<void> markAsFertilized(String id) async {
+    await ref.read(plantNotifierProvider.notifier).markAsFertilized(id);
   }
 }
 
 final homeNotifierProvider =
-    AsyncNotifierProvider<HomeNotifier, List<Plant>>(
-  HomeNotifier.new,
-);
+    AsyncNotifierProvider<HomeNotifier, HomeState>(HomeNotifier.new);

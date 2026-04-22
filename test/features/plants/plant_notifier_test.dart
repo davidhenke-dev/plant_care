@@ -80,4 +80,29 @@ void main() {
     expect(updated.first.lastWateredAt, isNotNull);
     expect(updated.first.needsWateringToday, isFalse);
   });
+
+  test('updatePlant aktualisiert Name und Gießintervall', () async {
+    final notifier = container.read(plantNotifierProvider.notifier);
+
+    await notifier.addPlant(
+      name: 'Monstera',
+      locationId: 'loc1',
+      wateringIntervalDays: 7,
+    );
+
+    final plants = await container.read(plantNotifierProvider.future);
+    await notifier.updatePlant(
+      id: plants.first.id,
+      name: 'Monstera Deliciosa',
+      locationId: 'loc2',
+      wateringIntervalDays: 10,
+      notes: 'Liebt Wasser',
+    );
+
+    final updated = await container.read(plantNotifierProvider.future);
+    expect(updated.first.name, 'Monstera Deliciosa');
+    expect(updated.first.locationId, 'loc2');
+    expect(updated.first.wateringIntervalDays, 10);
+    expect(updated.first.notes, 'Liebt Wasser');
+  });
 }
